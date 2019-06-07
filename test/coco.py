@@ -15,7 +15,7 @@ from config import system_configs
 from utils import crop_image, normalize_
 from external.nms import soft_nms, soft_nms_merge
 
-colours = np.random.rand(80,3)
+colours = np.random.rand(1,3)
 
 def _rescale_dets(detections, ratios, borders, sizes):
     xs, ys = detections[..., 0:4:2], detections[..., 1:4:2]
@@ -84,7 +84,7 @@ def kp_detection(db, nnet, result_dir, debug=False, decode_func=kp_decode):
     }[db.configs["nms_algorithm"]]
 
     top_bboxes = {}
-    for ind in tqdm(range(0, num_images), ncols=80, desc="locating kps"):
+    for ind in tqdm(range(0, num_images), ncols=1, desc="locating kps"):
         db_ind = db_inds[ind]
 
         image_id   = db.image_ids(db_ind)

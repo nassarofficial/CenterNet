@@ -65,6 +65,11 @@ def init_parallel_jobs(dbs, queue, fn, data_aug):
         task.start()
     return tasks
 
+def make_dirs(directories):
+    for directory in directories:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
 def train(training_dbs, validation_db, start_iter=0):
     learning_rate    = system_configs.learning_rate
     max_iteration    = system_configs.max_iter
@@ -74,6 +79,14 @@ def train(training_dbs, validation_db, start_iter=0):
     display          = system_configs.display
     decay_rate       = system_configs.decay_rate
     stepsize         = system_configs.stepsize
+
+    result_dir = "validation"
+    result_dir = os.path.join(result_dir, str(testiter), split)
+
+    if suffix is not None:
+        result_dir = os.path.join(result_dir, suffix)
+
+    make_dirs([result_dir])
 
     # getting the size of each database
     training_size   = len(training_dbs[0].db_inds)
@@ -152,7 +165,10 @@ def train(training_dbs, validation_db, start_iter=0):
                 nnet.eval_mode()
                 validation = pinned_validation_queue.get(block=True)
                 validation_loss = nnet.validate(**validation)
+
                 print("validation loss at iteration {}: {}".format(iteration, validation_loss.item()))
+                testing(validation_db, nnet, result_dir, debug=debug)
+
                 nnet.train_mode()
 
             if iteration % snapshot == 0:

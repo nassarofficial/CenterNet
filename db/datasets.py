@@ -1,5 +1,5 @@
-from db.coco import MSCOCO 
+from db.registree import REGISTREE
 
 datasets = {
-    "MSCOCO": MSCOCO
+    "REGISTREE": REGISTREE
 }
