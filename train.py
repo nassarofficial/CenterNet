@@ -80,13 +80,6 @@ def train(training_dbs, validation_db, start_iter=0):
     decay_rate       = system_configs.decay_rate
     stepsize         = system_configs.stepsize
 
-    result_dir = "validation"
-    result_dir = os.path.join(result_dir, str(testiter), split)
-
-    if suffix is not None:
-        result_dir = os.path.join(result_dir, suffix)
-
-    make_dirs([result_dir])
 
     # getting the size of each database
     training_size   = len(training_dbs[0].db_inds)
@@ -150,11 +143,11 @@ def train(training_dbs, validation_db, start_iter=0):
             training = pinned_training_queue.get(block=True)
             training_loss, focal_loss, pull_loss, push_loss, regr_loss = nnet.train(**training)
             #training_loss, focal_loss, pull_loss, push_loss, regr_loss, cls_loss = nnet.train(**training)
-
+            display = 1250
             if display and iteration % display == 0:
                 print("training loss at iteration {}: {}".format(iteration, training_loss.item()))
                 print("focal loss at iteration {}:    {}".format(iteration, focal_loss.item()))
-                print("pull loss at iteration {}:     {}".format(iteration, pull_loss.item())) 
+                print("pull loss at iteration {}:     {}".format(iteration, pull_loss.item()))
                 print("push loss at iteration {}:     {}".format(iteration, push_loss.item()))
                 print("regr loss at iteration {}:     {}".format(iteration, regr_loss.item()))
                 #print("cls loss at iteration {}:      {}\n".format(iteration, cls_loss.item()))
@@ -167,7 +160,7 @@ def train(training_dbs, validation_db, start_iter=0):
                 validation_loss = nnet.validate(**validation)
 
                 print("validation loss at iteration {}: {}".format(iteration, validation_loss.item()))
-                testing(validation_db, nnet, result_dir, debug=debug)
+                # testing(validation_db, nnet, result_dir, debug=debug)
 
                 nnet.train_mode()
 
@@ -194,7 +187,7 @@ if __name__ == "__main__":
     cfg_file = os.path.join(system_configs.config_dir, args.cfg_file + ".json")
     with open(cfg_file, "r") as f:
         configs = json.load(f)
-            
+
     configs["system"]["snapshot_name"] = args.cfg_file
     system_configs.update_config(configs["system"])
 
