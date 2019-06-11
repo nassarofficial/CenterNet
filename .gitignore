@@ -4,3 +4,15 @@ cache/nnet/CenterNet-104/
 cache/
 
 data/coco/anots/
+
+results/CenterNet-104/50000/validation/
+
+results/CenterNet-104/55000/validation/
+
+models/__pycache__/
+
+models/py_utils/__pycache__/
+
+results/CenterNet-104/70000/validation/
+
+test/__pycache__/
